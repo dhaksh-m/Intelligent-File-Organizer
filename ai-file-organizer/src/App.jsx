@@ -5,7 +5,7 @@ import Search from "./pages/Search";
 import Stats from "./pages/Stats";
 import Cleanup from "./pages/Cleanup";
 
-import "./style.css";
+import "./global.css";
 
 export default function App() {
   const [page, setPage] = useState("dashboard");
