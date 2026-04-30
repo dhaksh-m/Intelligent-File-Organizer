@@ -29,29 +29,27 @@ export default function App() {
   };
 
   // ⚡ AUTO LOAD on start
-  useEffect(() => {
-    loadFiles();
-  }, []);
+const loadFiles = async (path) => {
+  try {
+    const res = await fetch(
+      `http://localhost:5000/run?path=${encodeURIComponent(path)}`
+    );
 
-  return (
-    <div className="container">
-      <Sidebar setPage={setPage} />
+    const data = await res.json();
 
-      <div className="main">
-        {/* 🔄 Loading State */}
-        {loading && <p>🔄 Scanning files...</p>}
+    setFiles(data.files);
+  } catch (err) {
+    console.log("Using demo data...");
 
-        {/* 🧠 Page Routing */}
-        {page === "dashboard" && (
-          <Dashboard files={files} loadFiles={loadFiles} />
-        )}
+    // 🔥 DEMO DATA (for deployed version)
+    const demoFiles = [
+      "photo.jpg",
+      "movie.mp4",
+      "resume.pdf",
+      "notes.txt",
+      "image.png"
+    ];
 
-        {page === "search" && <Search files={files} />}
-
-        {page === "stats" && <Stats files={files} />}
-
-        {page === "cleanup" && <Cleanup files={files} />}
-      </div>
-    </div>
-  );
-}
+    setFiles(demoFiles);
+  }
+};
