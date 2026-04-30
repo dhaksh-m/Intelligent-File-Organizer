@@ -1,30 +1,33 @@
-import { useState } from "react";
-import FileList from "../components/FileList";
+export default function Dashboard({ data, loadFiles, folderPath, setFolderPath }) {
+  const { files, extensions } = data;
 
-export default function Dashboard({ files, loadFiles }) {
-  const [path, setPath] = useState("");
-
-  // categorize files
-  const images = files.filter(f => f.match(/\.(jpg|png)$/i));
+  const images = files.filter(f => f.match(/\.(jpg|png|jpeg)$/i));
   const videos = files.filter(f => f.match(/\.(mp4|mkv)$/i));
-  const docs = files.filter(f => f.match(/\.(pdf|txt|docx)$/i));
+  const docs = files.filter(f => f.match(/\.(pdf|docx|txt)$/i));
 
   return (
-    <>
-      <h1>📂 Dashboard</h1>
+    <div>
+      <h2>📁 Dashboard</h2>
 
-      <input
-        placeholder="Enter folder path..."
-        value={path}
-        onChange={(e) => setPath(e.target.value)}
-      />
+      {/* 🔍 Input */}
+      <div style={{ marginBottom: "15px" }}>
+        <input
+          value={folderPath}
+          onChange={(e) => setFolderPath(e.target.value)}
+          placeholder="Enter folder path"
+          style={{ padding: "8px", width: "300px" }}
+        />
 
-      <button onClick={() => loadFiles(path)}>
-        Scan Folder
-      </button>
+        <button
+          onClick={() => loadFiles(folderPath)}
+          style={{ marginLeft: "10px", padding: "8px" }}
+        >
+          Scan Folder
+        </button>
+      </div>
 
       {/* 📊 Stats */}
-      <div className="card">
+      <div>
         <h3>📊 Stats</h3>
         <p>Total Files: {files.length}</p>
         <p>Images: {images.length}</p>
@@ -32,24 +35,31 @@ export default function Dashboard({ files, loadFiles }) {
         <p>Docs: {docs.length}</p>
       </div>
 
-      {/* 📂 Categories */}
-      <div className="card">
-        <h3>🖼 Images</h3>
-        {images.map((f, i) => <p key={i}>{f}</p>)}
+      {/* 📂 Extension Count */}
+      <div style={{ marginTop: "20px" }}>
+        <h3>📂 File Types</h3>
+
+        {Object.keys(extensions).length === 0 ? (
+          <p>No data</p>
+        ) : (
+          Object.entries(extensions).map(([ext, count]) => (
+            <p key={ext}>
+              {ext} → {count}
+            </p>
+          ))
+        )}
       </div>
 
-      <div className="card">
-        <h3>🎥 Videos</h3>
-        {videos.map((f, i) => <p key={i}>{f}</p>)}
-      </div>
+      {/* 📁 File List */}
+      <div style={{ marginTop: "20px" }}>
+        <h3>📁 Files</h3>
 
-      <div className="card">
-        <h3>📄 Documents</h3>
-        {docs.map((f, i) => <p key={i}>{f}</p>)}
+        {files.length === 0 ? (
+          <p>No files found</p>
+        ) : (
+          files.map((file, i) => <p key={i}>{file}</p>)
+        )}
       </div>
-
-      {/* All files */}
-      <FileList files={files} />
-    </>
+    </div>
   );
 }

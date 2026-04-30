@@ -46,3 +46,17 @@ input {
   margin-right: 10px;
   width: 300px;
 }
+
+.loading {
+  padding: 10px;
+  color: #00d4ff;
+  font-weight: 500;
+}
+
+.error {
+  padding: 10px;
+  color: orange;
+  background: rgba(255, 165, 0, 0.1);
+  border-radius: 8px;
+  margin-bottom: 10px;
+}

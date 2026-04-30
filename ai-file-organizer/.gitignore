@@ -28,3 +28,9 @@ node_modules
 backend/*.exe
 public/backend/output.txt
 .env
+
+node_modules
+backend/*.exe
+public/backend/output.txt
+.env
+dist

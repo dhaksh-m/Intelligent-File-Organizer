@@ -1,8 +1,15 @@
-export default function Cleanup({ files }) {
+export default function Cleanup({ duplicates }) {
   return (
-    <>
-      <h1>🧹 Cleanup</h1>
-      <div className="card">Coming soon...</div>
-    </>
+    <div>
+      <h2>🧹 Duplicate Files</h2>
+
+      {duplicates.length === 0 ? (
+        <p>✅ No duplicates found</p>
+      ) : (
+        duplicates.map((file, i) => (
+          <p key={i}>⚠️ {file}</p>
+        ))
+      )}
+    </div>
   );
 }

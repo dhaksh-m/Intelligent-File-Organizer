@@ -1,11 +1,23 @@
-export default function Stats({ files }) {
-  return (
-    <>
-      <h1>📊 Stats</h1>
+export default function Stats({ data }) {
+  const { files, extensions } = data;
 
-      <div className="card">
-        Total Files: {files.length}
-      </div>
-    </>
+  return (
+    <div>
+      <h2>📊 Detailed Stats</h2>
+
+      <p>Total Files: {files.length}</p>
+
+      <h3>File Type Distribution</h3>
+
+      {Object.keys(extensions).length === 0 ? (
+        <p>No data</p>
+      ) : (
+        Object.entries(extensions).map(([ext, count]) => (
+          <p key={ext}>
+            {ext}: {count}
+          </p>
+        ))
+      )}
+    </div>
   );
 }
