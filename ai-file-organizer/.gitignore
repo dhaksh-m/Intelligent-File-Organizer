@@ -34,3 +34,8 @@ backend/*.exe
 public/backend/output.txt
 .env
 dist
+
+node_modules
+dist
+.env
+backend/*.exe

@@ -5,6 +5,7 @@ import { exec } from "child_process";
 const app = express();
 app.use(cors());
 
+// 🚀 RUN C PROGRAM
 app.get("/run", (req, res) => {
   const folderPath = req.query.path;
 
@@ -15,67 +16,35 @@ app.get("/run", (req, res) => {
   const command = `
     cd backend &&
     gcc main.c -o main &&
-    .\\main.exe "${folderPath}"
+    main.exe "${folderPath}"
   `;
 
   exec(command, (error, stdout, stderr) => {
+    console.log("----- C OUTPUT -----");
+    console.log(stdout);
+    console.log("----- C ERROR -----");
+    console.log(stderr);
+
     if (error) {
-      console.error(stderr);
-      return res.status(500).json({ error: "C program failed" });
+      return res.status(500).json({
+        error: "C execution failed",
+        details: stderr
+      });
     }
 
     try {
-      const lines = stdout.split("\n").map(l => l.trim());
-
-      let mode = "";
-      let files = [];
-      let extensions = {};
-      let duplicates = [];
-
-      for (let line of lines) {
-        if (line === "FILES:") {
-          mode = "files";
-          continue;
-        }
-        if (line === "EXTENSIONS:") {
-          mode = "ext";
-          continue;
-        }
-        if (line === "DUPLICATES:") {
-          mode = "dup";
-          continue;
-        }
-
-        if (!line) continue;
-
-        if (mode === "files") {
-          files.push(line);
-        }
-
-        if (mode === "ext") {
-          const [ext, count] = line.split(" ");
-          extensions[ext] = parseInt(count);
-        }
-
-        if (mode === "dup" && line !== "NONE") {
-          duplicates.push(line);
-        }
-      }
-
-      res.json({
-        success: true,
-        files,
-        extensions,
-        duplicates,
-      });
-
+      // 🔥 Expect JSON from C program
+      const data = JSON.parse(stdout);
+      res.json(data);
     } catch (e) {
-      console.error(e);
-      res.status(500).json({ error: "Parsing failed" });
+      res.status(500).json({
+        error: "Invalid JSON from C program",
+        raw: stdout
+      });
     }
   });
 });
 
 app.listen(5000, () => {
-  console.log("🚀 Backend running on http://localhost:5000");
+  console.log("✅ Server running on http://localhost:5000");
 });
